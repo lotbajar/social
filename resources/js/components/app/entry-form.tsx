@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { EntryListUpdateContext } from '@/contexts/entry-list-update-context';
+import { usePostVisibility } from '@/hooks/app/use-post-visibility';
 import type { Auth, Comment, Entry, Post } from '@/types';
 import { SpecialPages } from '@/types/modules/page';
 import { useForm, usePage } from '@inertiajs/react';
@@ -21,6 +22,9 @@ interface EntryFormProps {
     onSubmit?: () => void; // Función que se llama tras el envío exitoso del formulario.
     profileUserId?: null | number; // ID del usuario del perfil en el que se publica.
 }
+
+// Tipo auxiliar que garantiza una visibilidad válida.
+type PostVisibility = NonNullable<Post['visibility']>;
 
 /**
  * Formulario para crear o editar una entrada (publicación o comentario).
@@ -67,10 +71,17 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
         },
     };
 
-    // Hook de Inertia para gestionar datos del formulario, errores y estados.
+    // Hook para gestionar la visibilidad de una publicación.
+    const { visibility, changeVisibility, isCreatePost } = usePostVisibility({
+        formType,
+        entry: entry as Post | undefined,
+        profileUserId,
+    });
+
+    // Hook para gestionar datos del formulario, errores y estados.
     const { data, setData, post, patch, processing, errors, reset } = useForm({
         content: '',
-        visibility: formType === 'post' ? (entry ? (entry as Post).visibility : profileUserId ? null : 'public') : null,
+        visibility,
         profile_user_id: profileUserId,
         is_closed: formType === 'post' ? (entry ? (entry as Post).is_closed : false) : null,
     });
@@ -135,6 +146,13 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
             }
         }
     }, [entry]);
+
+    // Guarda la visibilidad de la publicación en el formulario.
+    useEffect(() => {
+        if (formType === 'post') {
+            setData('visibility', visibility);
+        }
+    }, [visibility]);
 
     // Restaura la posición del cursor al cambiar entre vista previa y edición.
     useEffect(() => {
@@ -217,7 +235,7 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
                                                 title={t('post_visibility')}
                                             >
                                                 {(() => {
-                                                    const Icon = visibilityOptions[(data as Post).visibility].icon;
+                                                    const Icon = visibilityOptions[visibility!].icon;
                                                     return <Icon className="h-4 w-4" />;
                                                 })()}
                                             </Button>
@@ -225,8 +243,8 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
 
                                         <DropdownMenuContent align="end" className="w-72">
                                             <DropdownMenuRadioGroup
-                                                value={data.visibility as Post['visibility']}
-                                                onValueChange={(value) => setData('visibility', value as Post['visibility'])}
+                                                value={visibility as PostVisibility}
+                                                onValueChange={(value) => changeVisibility(value as PostVisibility)}
                                                 className="flex flex-col gap-1"
                                             >
                                                 {Object.entries(visibilityOptions).map(([key, option]) => {
