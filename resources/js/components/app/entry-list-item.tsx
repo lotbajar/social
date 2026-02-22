@@ -19,10 +19,8 @@ interface EntryListItemProps {
     entry: Entry;
 }
 
-interface VisibilityData {
-    icon: React.ElementType;
-    message: string;
-}
+// Tipo auxiliar que garantiza una visibilidad válida.
+type PostVisibility = NonNullable<Post['visibility']>;
 
 /**
  * Entrada (publicación o comentario).
@@ -75,7 +73,7 @@ export default function EntryListItem({ entry }: EntryListItemProps) {
         }
 
         if (entry.type === 'post') {
-            return visibilityConfig[entry.visibility!];
+            return visibilityConfig[entry.visibility as PostVisibility];
         }
 
         return null;
