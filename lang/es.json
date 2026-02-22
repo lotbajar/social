@@ -237,6 +237,7 @@
     "Following this user is not allowed because there is a block between you.": "No está permitido seguir a este usuario porque existe un bloqueo entre ustedes.",
     "Invitation successfully created.": "La invitación se creó correctamente.",
     "Invitation successfully deleted.": "La invitación se eliminó correctamente.",
+    "Maximum reactions reached.": "Se alcanzó el máximo de reacciones.",
     "Notification marked as read.": "Notificación marcada como leída.",
     "Option disabled for moderators.": "Opción desactivada para moderadores.",
     "User registration is disabled.": "El registro de usuarios está inhabilitado.",

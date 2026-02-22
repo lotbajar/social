@@ -82,7 +82,7 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
                 },
 
                 onError: (errors) => {
-                    toast.error(t('unexpected_error'));
+                    toast.error(errors.message ?? t('unexpected_error'));
 
                     if (import.meta.env.DEV) {
                         console.error(errors);

@@ -137,6 +137,23 @@ class ReactionController extends Controller
             return back()->with('status', 'reaction_replaced');
         }
 
+        // Cuenta la cantidad de emojis distintos en el recurso.
+        $distinct_count = $model->reactions()
+            ->distinct('emoji')
+            ->count('emoji');
+
+        // Verifica si el emoji ya existe en el recurso.
+        $emoji_exists = $model->reactions()
+            ->where('emoji', $emoji)
+            ->exists();
+
+        // Si se alcanzó el límite y el emoji aún no existe, se rechaza.
+        if ($distinct_count >= 10 && !$emoji_exists) {
+            return back()->withErrors([
+                'message' => __('Maximum reactions reached.'),
+            ]);
+        }
+
         // Si no existe una reacción previa, se crea una nueva.
         $model->reactions()->create([
             'user_id' => $user->id,
