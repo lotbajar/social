@@ -217,6 +217,7 @@
     "random_username_if_empty": "If left empty, a random username will be assigned.",
     "react": "React",
     "react_with_emoji": "React with {{emoji}}",
+    "reactions": "Reactions",
     "read_more": "Read more",
     "registered": "Registered",
     "related_reports": "Related reports",

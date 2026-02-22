@@ -183,6 +183,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Reacciones
     Route::put('/reaction', [ReactionController::class, 'toggle'])
         ->name('reaction.toggle');
+    Route::get('/post/{post}/reactions', [ReactionController::class, 'index'])
+        ->name('post.reaction.index');
+    Route::get('/post/{post}/comment/{comment}/reactions', [ReactionController::class, 'index'])
+        ->name('comment.reaction.index');
 
     // Multimedia
     Route::post('/media', [MediaController::class, 'store'])

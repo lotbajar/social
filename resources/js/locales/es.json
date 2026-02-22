@@ -180,6 +180,7 @@
     "only_you_can_see_your_post": "Solo tú puedes ver tu publicación.",
     "open_album": "Abrir álbum",
     "open_reports": "Reportes abiertos",
+    "open_uploads_history": "Abrir historial de archivos subidos",
     "options": "Opciones",
     "or_go_back_to_login": "O bien, vuelve a <0>iniciar sesión</0>",
     "or_go_back_to_verification": "O bien, vuelve a <0>verificación de correo</0>",
@@ -216,6 +217,7 @@
     "random_username_if_empty": "Si el campo se deja vacío, el registro se guardará con un nombre de usuario aleatorio.",
     "react": "Reaccionar",
     "react_with_emoji": "Reaccionar con {{emoji}}",
+    "reactions": "Reacciones",
     "read_more": "Leer más",
     "registered": "Registrado",
     "related_reports": "Reportes relacionados",
@@ -327,6 +329,5 @@
     "welcome_message": "Conecta, comparte y descubre lo que otros piensan.",
     "welcome_to_site": "Bienvenido a {{siteName}}",
     "whats_on_your_mind": "¿En qué estás pensando?",
-    "yes": "Sí",
-    "open_uploads_history": "Abrir historial de archivos subidos"
+    "yes": "Sí"
 }
