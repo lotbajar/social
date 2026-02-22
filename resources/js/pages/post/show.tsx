@@ -113,14 +113,16 @@ export default function PostShow() {
                                 </>
                             )}
 
-                            {/* Formulario para añadir un nuevo comentario */}
+                            {/* Mensaje de comentarios cerrados */}
                             {post.is_closed && (
                                 <div className="bg-muted text-muted-foreground border-border flex items-center gap-2 rounded-md border px-3 py-2 text-sm">
                                     <Lock className="h-4 w-4" />
                                     <span>{t('comments_closed')}</span>
                                 </div>
                             )}
-                            {canComment && <EntryForm postId={post.id} />}
+
+                            {/* Formulario para añadir un nuevo comentario */}
+                            <div id="comment-form">{canComment && <EntryForm postId={post.id} />}</div>
                         </EntryListUpdateContext.Provider>
                     </section>
                 </article>
