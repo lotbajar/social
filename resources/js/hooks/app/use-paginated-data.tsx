@@ -1,12 +1,15 @@
-import type { Entry, EntryAction } from '@/types';
+import type { EntryAction } from '@/types';
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
-interface UsePaginatedProps<T> {
-    // Lista inicial de elementos.
-    initialItems: T[];
+type WithId = {
+    id: number | string;
+};
+
+interface UsePaginatedProps<T extends WithId> {
+    initialItems: T[]; // Lista inicial de elementos.
 
     // Cursor inicial utilizado para solicitar la siguiente página.
     initialCursor: string | null;
@@ -14,32 +17,32 @@ interface UsePaginatedProps<T> {
     // Nombre de la propiedad devuelta por Inertia que contiene
     // los datos paginados (por ejemplo: "posts", "comments", "users").
     propKey: string;
+
+    // Controla si los nuevos elementos se insertan al inicio o al final.
+    insertAtStart?: boolean;
 }
 
 /**
- * Hook genérico que gestiona la paginación por cursor
- * para listados como publicaciones, comentarios o usuarios.
+ * Hook genérico para gestionar datos paginados por cursor
+ * y sincronizar cambios individuales sobre la colección.
  */
-export function usePaginatedData<T>({ initialItems, initialCursor, propKey }: UsePaginatedProps<T>) {
+export function usePaginatedData<T extends WithId>({ initialItems, initialCursor, propKey, insertAtStart = false }: UsePaginatedProps<T>) {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
-    // Estado que contiene la lista actual de elementos renderizados.
-    const [items, setItems] = useState<T[]>(initialItems);
-
-    // Cursor que identifica la siguiente página a solicitar.
-    // Si es null, no existen más elementos disponibles.
-    const [nextCursor, setNextCursor] = useState<string | null>(initialCursor);
-
-    // Estado que indica si actualmente se está solicitando
+    // Estados que contienen la lista de elementos renderizados, el cursor
+    // de paginación y un indicador que especifica si se está solicitando
     // una nueva página de datos al servidor.
-    const [processing, setProcessing] = useState<boolean>(false);
+    const [items, setItems] = useState<T[]>(initialItems);
+    const [nextCursor, setNextCursor] = useState<string | null>(initialCursor);
+    const [processing, setProcessing] = useState(false);
 
     /**
-     * Solicita al servidor la siguiente página de elementos.
+     * Solicita la siguiente página de resultados al servidor.
      */
     const loadMore = () => {
         setProcessing(true);
+
         router.reload({
             // Indica a Inertia que solo recargue la propiedad paginada,
             // evitando recalcular y reenviar el resto de la página.
@@ -51,22 +54,19 @@ export function usePaginatedData<T>({ initialItems, initialCursor, propKey }: Us
                 'X-Cursor': nextCursor ?? '',
             },
 
+            // Combina los elementos previos con los nuevos,
+            // evitando duplicados por ID.
             onSuccess: (page) => {
-                // Extrae los nuevos elementos y el cursor de la siguiente página
-                // desde las propiedades de Inertia.
                 const pageData = (page.props as any)[propKey];
-                const newItems = pageData?.data ?? [];
+                const newItems: T[] = pageData?.data ?? [];
                 const next = pageData?.meta.next_cursor ?? null;
 
-                // Combina los elementos previos con los nuevos,
-                // evitando duplicados por ID.
                 setItems((prev) => {
-                    const newIds = new Set(newItems.map((item: any) => item.id));
-                    const filteredPrev = prev.filter((item: any) => !newIds.has(item.id));
+                    const newIds = new Set(newItems.map((item) => item.id));
+                    const filteredPrev = prev.filter((item) => !newIds.has(item.id));
                     return [...filteredPrev, ...newItems];
                 });
 
-                // Actualiza el cursor para la siguiente solicitud.
                 setNextCursor(next);
             },
             onError: (errors) => {
@@ -83,36 +83,33 @@ export function usePaginatedData<T>({ initialItems, initialCursor, propKey }: Us
     };
 
     /**
-     * Sincroniza cambios individuales sobre la lista actual,
-     * como actualizaciones, eliminaciones o inserciones.
-     *
-     * Se utiliza tras crear, editar o eliminar
-     * una publicación o comentario.
+     * Aplica un cambio puntual sobre la colección actual:
+     * creación, actualización o eliminación.
      */
-    const handleEntryChanges = (action: EntryAction, entry: T) => {
+    const applyItemChange = (action: EntryAction, item: T) => {
         setItems((prev) => {
-            const e = entry as Entry;
-
+            // Reemplaza el elemento existente por su versión actualizada.
             if (action === 'update') {
-                // Reemplaza el elemento existente por su versión actualizada.
-                const updated = [...prev];
-                const index = prev.findIndex((item: any) => item.id === e.id);
+                const index = prev.findIndex((i) => i.id === item.id);
 
-                if (index !== -1) {
-                    updated[index] = entry;
+                if (index === -1) {
+                    return prev;
                 }
+
+                const updated = [...prev];
+                updated[index] = item;
 
                 return updated;
             }
 
+            // Elimina el elemento correspondiente según su ID.
             if (action === 'delete') {
-                // Elimina el elemento correspondiente según su ID.
-                return prev.filter((item: any) => item.id !== e.id);
+                return prev.filter((i) => i.id !== item.id);
             }
 
-            // Inserta un nuevo elemento en la lista. Las publicaciones
-            // se agregan al inicio, mientras que otros tipos se agregan al final.
-            return e.type === 'post' ? [entry, ...prev] : [...prev, entry];
+            // Inserta un nuevo elemento al inicio o al final
+            // de la colección.
+            return insertAtStart ? [item, ...prev] : [...prev, item];
         });
     };
 
@@ -141,6 +138,6 @@ export function usePaginatedData<T>({ initialItems, initialCursor, propKey }: Us
         loadMore,
         resetProps,
         updateItems,
-        handleEntryChanges,
+        applyItemChange,
     };
 }

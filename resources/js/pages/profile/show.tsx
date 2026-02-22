@@ -44,11 +44,12 @@ export default function ProfileShow() {
         nextCursor, // Cursor para solicitar la siguiente página de publicaciones.
         processing, // Indica si se está cargando más contenido.
         loadMore, // Función para cargar más publicaciones.
-        handleEntryChanges, // Función para sincronizar cambios en el listado.
+        applyItemChange, // Función para sincronizar cambios en el listado.
     } = usePaginatedData<Post>({
         initialItems: posts.data, // Publicaciones iniciales cargadas desde el servidor.
         initialCursor: posts.meta.next_cursor, // Cursor inicial de paginación.
         propKey: 'posts', // Propiedad de la respuesta de Inertia que contiene los datos.
+        insertAtStart: true, // Indica que los nuevos elementos deben agregarse al inicio de la lista.
     });
 
     // Maneja el cambio de estado del filtro y recarga la vista
@@ -75,7 +76,7 @@ export default function ProfileShow() {
                 <ProfileHeader user={user} />
 
                 {/* Contexto para sincronizar cambios en el listado de publicaciones */}
-                <EntryListUpdateContext.Provider value={handleEntryChanges}>
+                <EntryListUpdateContext.Provider value={applyItemChange}>
                     {/* Formulario para crear publicaciones */}
                     {(isOwner || canPost) && <EntryForm profileUserId={profileUserId} />}
 

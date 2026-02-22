@@ -42,7 +42,7 @@ export default function SearchIndex() {
         nextCursor, // Cursor para solicitar la siguiente página de resultados.
         processing, // Indica si se está cargando más contenido.
         loadMore, // Función para cargar más resultados.
-        handleEntryChanges, // Función para sincronizar cambios en publicaciones.
+        applyItemChange, // Función para sincronizar cambios en publicaciones.
         resetProps, // Función para restablecer los resultados a su estado inicial.
     } = usePaginatedData<Post | User>({
         initialItems: props.results.data, // Resultados iniciales cargados desde el servidor.
@@ -95,7 +95,7 @@ export default function SearchIndex() {
                 <SearchBar type={type} query={query} onSubmit={onSubmit} />
 
                 {/* Contexto para sincronizar cambios en los resultados */}
-                <EntryListUpdateContext.Provider value={handleEntryChanges}>
+                <EntryListUpdateContext.Provider value={applyItemChange}>
                     {/* Listado de resultados según el tipo de búsqueda */}
                     <SearchSearchResults results={type === 'post' ? (results as Post[]) : (results as User[])} />
                 </EntryListUpdateContext.Provider>

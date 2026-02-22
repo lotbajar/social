@@ -38,9 +38,12 @@ export default function FollowIndex() {
     } = usePaginatedData<User>({
         // Selecciona dinámicamente los datos iniciales según la vista.
         initialItems: pageName === 'following' ? following.data : followers.data,
+
         // Cursor inicial según el tipo de listado.
         initialCursor: pageName === 'following' ? following.meta.next_cursor : followers.meta.next_cursor,
-        propKey: 'users', // Propiedad de la respuesta de Inertia que contiene los datos.
+
+        // Propiedad de la respuesta de Inertia que contiene los datos.
+        propKey: 'users',
     });
 
     // Migas de pan de la vista actual.

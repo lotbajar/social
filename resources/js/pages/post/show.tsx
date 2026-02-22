@@ -33,7 +33,7 @@ export default function PostShow() {
         nextCursor, // Cursor para solicitar la siguiente página de comentarios.
         processing, // Indica si se está cargando más contenido.
         loadMore, // Función para cargar más comentarios.
-        handleEntryChanges, // Función para sincronizar cambios en el hilo.
+        applyItemChange, // Función para sincronizar cambios en el hilo.
     } = usePaginatedData<Comment>({
         initialItems: comments.data, // Comentarios iniciales cargados desde el servidor.
         initialCursor: comments.meta.next_cursor, // Cursor inicial de paginación.
@@ -85,7 +85,7 @@ export default function PostShow() {
                     {/* Sección de comentarios */}
                     <section id="comments" ref={commentsRef} className="flex flex-col gap-8">
                         {/* Contexto para sincronizar cambios en el listado de comentarios */}
-                        <EntryListUpdateContext.Provider value={handleEntryChanges}>
+                        <EntryListUpdateContext.Provider value={applyItemChange}>
                             {/* Encabezado y listado de comentarios */}
                             {post.comments_count > 0 && (
                                 <>
