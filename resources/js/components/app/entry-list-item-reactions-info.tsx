@@ -1,30 +1,31 @@
 import { Entry, Reaction, Reactions, User, Users } from '@/types';
-import { router } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/button';
 import UserAvatar from './user-avatar';
 
-interface Props {
-    entry: Entry;
-}
-
 interface ReactionsInfo {
-    type: 'post' | 'comment';
-    id: number;
-    reactions: Reactions;
-    users: Users;
-    selected_emoji: string;
-    next_cursor: string;
+    type: 'post' | 'comment'; // Tipo de entrada.
+    id: number; // ID de la entrada.
+    reactions: Reactions; // Reacciones hechas en la entrada.
+    selected_emoji: string; // Emoji seleccionado.
+    users: Users; // Usuarios que reaccionaron con "selected_emoji".
+    next_cursor: string; // Cursor de paginación para lista de usuarios.
 }
 
-type FetchMode = 'initial' | 'emoji' | 'append';
+/**
+ * initial: carga inicial.
+ * users: carga de usuarios para cuando el emoji seleccionado cambia.
+ * append: carga de nuevos usuarios en la lista actual.
+ */
+type FetchMode = 'initial' | 'users' | 'append';
 
 /**
  * Muestra información adicional sobre las reacciones de una entrada.
  */
-export default function EntryListItemReactionsInfo({ entry }: Props) {
+export default function EntryListItemReactionsInfo({ entry }: { entry: Entry }) {
     // Función para traducir los textos de la interfaz.
     const { t } = useTranslation();
 
@@ -32,26 +33,29 @@ export default function EntryListItemReactionsInfo({ entry }: Props) {
     // el total de reacciones hechas.
     const [emojiList, setEmojiList] = useState<Reaction[]>([]);
 
-    // Usuarios que han reaccionado con "selectedEmoji".
-    const [users, setUsers] = useState<User[]>([]);
-
     // Emoji del que se desea listar los usuarios que han reaccionado con él.
     const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
+
+    // Usuarios que han reaccionado con "selectedEmoji".
+    const [users, setUsers] = useState<User[]>([]);
 
     // Cursor de paginación.
     const [nextCursor, setNextCursor] = useState<string | null>(null);
 
-    // Estados que controlan los iconos de cargando para la carga inicial,
-    // los emojis y el botón cargar más.
+    // Controla la visibilidad del contenido durante la carga inicial.
     const [initialLoading, setInitialLoading] = useState(false);
-    const [emojiLoading, setEmojiLoading] = useState(false);
+
+    // Contrala la visibilidad de la lista de usuarios cuando se cambia de emoji.
+    const [usersLoading, setUsersLoading] = useState(false);
+
+    // Controla el estado del botón cargar más usuarios.
     const [loadMoreLoading, setLoadMoreLoading] = useState(false);
 
     // Obtiene los emojis asociados a la entrada y los usuarios que han
     // reaccionado con el emoji seleccionado.
-    const fetchReactions = ({ emoji, cursor, mode }: { emoji?: string; cursor?: string | null; mode: FetchMode }) => {
+    const fetchReactions = ({ emoji, mode }: { emoji?: string; mode: FetchMode }) => {
         if (mode === 'initial') setInitialLoading(true);
-        if (mode === 'emoji') setEmojiLoading(true);
+        if (mode === 'users') setUsersLoading(true);
         if (mode === 'append') setLoadMoreLoading(true);
 
         router.get(
@@ -68,13 +72,13 @@ export default function EntryListItemReactionsInfo({ entry }: Props) {
                 onSuccess: (page) => {
                     const data = page.props.reactions_info as ReactionsInfo;
 
-                    // Emojis solo se iniciaizan en la primera carga.
+                    // Los emojis solo se iniciaizan en la primera carga.
                     if (mode === 'initial') {
                         setEmojiList(data.reactions.data);
                     }
 
-                    // Si se solicitó una página de usuarios, agrega
-                    // los elementos. De lo contrario, inicializa el estado.
+                    // Si se solicitó una página de usuarios, agrega los nuevos
+                    // elementos. De lo contrario, inicializa el estado.
                     if (mode === 'append') {
                         setUsers((prev) => [...prev, ...data.users.data]);
                     } else {
@@ -86,7 +90,7 @@ export default function EntryListItemReactionsInfo({ entry }: Props) {
                 },
                 onFinish: () => {
                     if (mode === 'initial') setInitialLoading(false);
-                    if (mode === 'emoji') setEmojiLoading(false);
+                    if (mode === 'users') setUsersLoading(false);
                     if (mode === 'append') setLoadMoreLoading(false);
                 },
             },
@@ -99,14 +103,13 @@ export default function EntryListItemReactionsInfo({ entry }: Props) {
             return;
         }
 
-        fetchReactions({ emoji, mode: 'emoji' });
+        fetchReactions({ emoji, mode: 'users' });
     };
 
     // Carga más usuarios.
     const loadMore = () => {
         fetchReactions({
             emoji: selectedEmoji!,
-            cursor: nextCursor,
             mode: 'append',
         });
     };
@@ -127,8 +130,9 @@ export default function EntryListItemReactionsInfo({ entry }: Props) {
                 </>
             ) : (
                 <div className="flex h-full gap-4">
-                    {/* Columna izquierda de emojis */}
+                    {/* Columna izquierda */}
                     <div className="min-w-[120px] space-y-2 border-r pr-3">
+                        {/* Emojis */}
                         {emojiList.map((reaction) => (
                             <button
                                 key={reaction.emoji}
@@ -145,7 +149,7 @@ export default function EntryListItemReactionsInfo({ entry }: Props) {
 
                     {/* Columna derecha */}
                     <div className="flex flex-1 flex-col gap-3">
-                        {emojiLoading ? (
+                        {usersLoading ? (
                             <>
                                 {/* Icono cargando para la lista de usuarios */}
                                 <div className="flex flex-1 items-center justify-center">
@@ -154,12 +158,12 @@ export default function EntryListItemReactionsInfo({ entry }: Props) {
                             </>
                         ) : (
                             <>
-                                {/* Usuarios */}
+                                {/* Lista de usuarios */}
                                 <div className="flex flex-1 flex-col overflow-y-auto">
                                     {users.map((user) => (
                                         <div key={user.id} className="flex items-center gap-3">
                                             <UserAvatar className="h-10 w-10" user={user} />
-                                            <span>{user.username}</span>
+                                            <Link href={route('profile.show', user.username)}>{user.username}</Link>
                                         </div>
                                     ))}
                                 </div>
