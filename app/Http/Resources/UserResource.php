@@ -39,17 +39,18 @@ class UserResource extends JsonResource
          *
          * Se permite si:
          *    - es el mismo usuario representado por el recurso actual o
-         *    - es un administrador.
+         *    - es un administrador y se está en un entorno local.
          */
         $can_view_email = 
             $auth && (
-                $auth->id === $this->id || $auth->hasRole('admin')
+                $auth->id === $this->id ||
+                ($auth->hasRole('admin') && app()->environment('local'))
             );
 
         // Datos sensibles.
         $email = $can_view_email
             ? $this->getRawOriginal('email')
-            : null;
+            : '';
 
         $email_verified_at = $can_view_sensitive_data
             ? $this->email_verified_at
