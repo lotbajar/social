@@ -79,6 +79,7 @@ class AuthSignUpController extends Controller
             $user->givePermissionTo([
                 'post',
                 'comment',
+                'react',
                 'update_username',
                 'update_avatar',
             ]);

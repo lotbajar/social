@@ -1,6 +1,7 @@
 export type UserPermission = 
     | 'post' 
-    | 'comment' 
+    | 'comment'
+    | 'react'
     | 'update_username' 
     | 'update_avatar';
 

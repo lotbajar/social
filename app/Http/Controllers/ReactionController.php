@@ -10,6 +10,7 @@ use App\Http\Resources\UserResource;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Reaction;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -22,6 +23,8 @@ use Inertia\Inertia;
  */
 class ReactionController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Lista los usuarios que hicieron una reacción dada sobre una
      * publicación o comentario.
@@ -119,6 +122,14 @@ class ReactionController extends Controller
          $model = $type === 'post' 
             ? Post::findOrFail($id) 
             : Comment::findOrFail($id);
+
+        // Obtiene la publicación y el comentario asociado a la reacción.
+        $post = $type === 'post' ? $model : $model->post;
+        $comment = $type === 'comment' ? $model : null;
+
+        // Deniega el acceso si el usuario autenticado
+        // no tiene permisos para reaccionar.
+        $this->authorize('toggle', [Reaction::class, $post, $comment]);
 
         // Busca si el usuario ya tiene una reacción registrada
         // sobre el recurso.

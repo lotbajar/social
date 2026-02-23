@@ -15,6 +15,7 @@ class PermissionSeeder extends Seeder
     {
         Permission::firstOrCreate(['name' => 'post']);
         Permission::firstOrCreate(['name' => 'comment']);
+        Permission::firstOrCreate(['name' => 'react']);
         Permission::firstOrCreate(['name' => 'update_username']);
         Permission::firstOrCreate(['name' => 'update_avatar']);
     }

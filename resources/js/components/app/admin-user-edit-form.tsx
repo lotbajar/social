@@ -38,6 +38,7 @@ export default function AdminUserEditForm({ user }: AdminUserEditFormProps) {
     const permissions = [
         { key: 'post', label: t('can_post') },
         { key: 'comment', label: t('can_comment') },
+        { key: 'react', label: t('can_react') },
         { key: 'update_avatar', label: t('can_update_avatar') },
         { key: 'update_username', label: t('can_update_username') },
     ];

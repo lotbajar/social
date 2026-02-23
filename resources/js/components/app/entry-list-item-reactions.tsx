@@ -131,6 +131,7 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
                             aria-label={reactedByUser ? t('remove_reaction') : t('react_with_emoji', { emoji })}
                             title={reactedByUser ? t('remove_reaction') : t('react_with_emoji', { emoji })}
                             variant="outline"
+                            disabled={!auth.user || !auth.user.permissions.includes('react')}
                         >
                             <span className="mr-1">{count}</span>
                             <span>{emoji}</span>
@@ -161,9 +162,11 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
                         )}
 
                         {/* Botón para abrir el selector de emojis */}
-                        <Button onClick={() => setShowPicker(!showPicker)} variant="outline" title={t('react')}>
-                            <SmilePlus className="h-4 w-4" aria-hidden={true} />
-                        </Button>
+                        {auth.user.permissions.includes('react') && (
+                            <Button onClick={() => setShowPicker(!showPicker)} variant="outline" title={t('react')}>
+                                <SmilePlus className="h-4 w-4" aria-hidden={true} />
+                            </Button>
+                        )}
                     </ButtonGroup>
                 </div>
             )}

@@ -382,6 +382,7 @@ class AdminUserController extends Controller
                 Rule::in([
                     'post',
                     'comment',
+                    'react',
                     'update_avatar',
                     'update_username',
                 ]),
