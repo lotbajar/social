@@ -81,7 +81,11 @@ class PageSeeder extends Seeder
             $pages[$index]['created_at'] = now()->subSeconds($index);
             $pages[$index]['updated_at'] = now()->subSeconds($index);
         }
-
-        DB::table('pages')->insert($pages);
+        
+        DB::table('pages')->upsert(
+            $pages, 
+            ['slug', 'language'],
+            ['title', 'type', 'content', 'updated_at']
+        );
     }
 }
