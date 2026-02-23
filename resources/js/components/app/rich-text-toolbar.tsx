@@ -456,7 +456,12 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                 </Tooltip>
                 <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
                     {(Object.keys(sizes) as (keyof typeof sizes)[]).map((key) => (
-                        <Button key={key} variant="ghost" className="flex items-center gap-2 text-sm" onClick={() => onSizeSelected(key)}>
+                        <Button
+                            key={key}
+                            variant="ghost"
+                            className="flex w-full items-center justify-start gap-2 text-sm"
+                            onClick={() => onSizeSelected(key)}
+                        >
                             <Type className={`h-4 w-4 ${key === 'small' ? 'scale-90' : 'scale-125'}`} />
                             {key === 'small' ? t('small') : t('big')}
                         </Button>
@@ -573,47 +578,64 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                 </Button>
             </Tooltip>
 
-            {/* Código en línea */}
-            <Tooltip content={t('inline_code')}>
-                <Button type="button" variant="ghost" size="icon" onClick={onInlineCode}>
-                    <Code className="h-4 w-4" />
-                </Button>
-            </Tooltip>
+            {/* Código */}
+            <Popover>
+                <Tooltip content={t('code')}>
+                    <PopoverTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            <Code className="h-4 w-4" />
+                        </Button>
+                    </PopoverTrigger>
+                </Tooltip>
+                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
+                    <Button variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onInlineCode}>
+                        <Code className="h-4 w-4" />
+                        {t('inline_code')}
+                    </Button>
+                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onCodeBlock}>
+                        <SquareCode className="h-4 w-4" />
+                        {t('code_block')}
+                    </Button>
+                </PopoverContent>
+            </Popover>
 
-            {/* Bloque de código */}
-            <Tooltip content={t('code_block')}>
-                <Button type="button" variant="ghost" size="icon" onClick={onCodeBlock}>
-                    <SquareCode className="h-4 w-4" />
-                </Button>
-            </Tooltip>
+            {/* Lista */}
+            <Popover>
+                <Tooltip content={t('list')}>
+                    <PopoverTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            <List className="h-4 w-4" />
+                        </Button>
+                    </PopoverTrigger>
+                </Tooltip>
+                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
+                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onOrderedList}>
+                        <ListOrdered className="h-4 w-4" /> {t('ordered_list')}
+                    </Button>
+                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onUnorderedList}>
+                        <List className="h-4 w-4" /> {t('unordered_list')}
+                    </Button>
+                </PopoverContent>
+            </Popover>
 
-            {/* Lista ordenada */}
-            <Tooltip content={t('ordered_list')}>
-                <Button type="button" variant="ghost" size="icon" onClick={onOrderedList}>
-                    <ListOrdered className="h-4 w-4" />
-                </Button>
-            </Tooltip>
-
-            {/* Lista sin orden */}
-            <Tooltip content={t('unordered_list')}>
-                <Button type="button" variant="ghost" size="icon" onClick={onUnorderedList}>
-                    <List className="h-4 w-4" />
-                </Button>
-            </Tooltip>
-
-            {/* Texto oculto en línea */}
-            <Tooltip content={t('hidden_text')}>
-                <Button type="button" variant="ghost" size="icon" onClick={onHiddenInline}>
-                    <EyeOff className="h-4 w-4" />
-                </Button>
-            </Tooltip>
-
-            {/* Bloque de texto oculto */}
-            <Tooltip content={t('hidden_block')}>
-                <Button type="button" variant="ghost" size="icon" onClick={onHiddenBlock}>
-                    <CaptionsOff className="h-4 w-4" />
-                </Button>
-            </Tooltip>
+            {/* Contenido oculto */}
+            <Popover>
+                <Tooltip content={t('hidden_content')}>
+                    <PopoverTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            <EyeOff className="h-4 w-4" />
+                        </Button>
+                    </PopoverTrigger>
+                </Tooltip>
+                <PopoverContent className="flex w-auto flex-col items-start gap-1 p-2">
+                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onHiddenInline}>
+                        <EyeOff className="h-4 w-4" /> {t('hidden_text')}
+                    </Button>
+                    <Button type="button" variant="ghost" className="flex w-full items-center justify-start gap-2 text-sm" onClick={onHiddenBlock}>
+                        <CaptionsOff className="h-4 w-4" /> {t('hidden_block')}
+                    </Button>
+                </PopoverContent>
+            </Popover>
 
             {/* Video */}
             <Popover>
