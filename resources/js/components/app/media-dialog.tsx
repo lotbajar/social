@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { User } from '@/types';
 import { Media } from '@/types/modules/media';
+import { DialogDescription } from '@radix-ui/react-dialog';
 import { useTranslation } from 'react-i18next';
 import MediaDialogAlbum from './media-dialog-album';
 
@@ -24,6 +25,7 @@ export default function MediaDialog({ open, user, type, onClose, onSelect }: Med
             <DialogContent className="!max-w-5xl">
                 <DialogHeader>
                     <DialogTitle>{t('uploaded_files')}</DialogTitle>
+                    <DialogDescription>{t('use_or_delete_your_uploaded_files')}</DialogDescription>
                 </DialogHeader>
 
                 <MediaDialogAlbum
