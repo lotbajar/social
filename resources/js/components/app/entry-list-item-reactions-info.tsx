@@ -159,7 +159,7 @@ export default function EntryListItemReactionsInfo({ entry }: { entry: Entry }) 
                         ) : (
                             <>
                                 {/* Lista de usuarios */}
-                                <div className="flex flex-1 flex-col overflow-y-auto">
+                                <div className="flex flex-1 flex-col gap-3 overflow-y-auto">
                                     {users.map((user) => (
                                         <div key={user.id} className="flex items-center gap-3">
                                             <UserAvatar className="h-10 w-10" user={user} />
