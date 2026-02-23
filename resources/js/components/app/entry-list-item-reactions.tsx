@@ -7,6 +7,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import EntryListItemReactionsInfo from './entry-list-item-reactions-info';
 
 interface EntryListItemReactionsProps {
     // Entrada (publicación o comentario) sobre la que se pueden aplicar reacciones.
@@ -149,6 +151,19 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
                     <Picker data={data} onEmojiSelect={handleSelect} />
                 </div>
             )}
+
+            {/* Más información sobre las reacciones */}
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button variant="outline">{t('reactions')}</Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>{t('reactions')}</DialogTitle>
+                    </DialogHeader>
+                    <EntryListItemReactionsInfo entry={entry} />
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

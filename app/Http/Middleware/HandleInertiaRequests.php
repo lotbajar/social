@@ -111,7 +111,8 @@ class HandleInertiaRequests extends Middleware
             'comment' => fn () => $request->session()->get('comment'),
             'invitation' => fn () => $request->session()->get('invitation'),
             'media' => fn () => $request->session()->get('media'),
-            'media_url' => fn () => $request->session()->get('media_url'),            
+            'media_url' => fn () => $request->session()->get('media_url'),
+            'reactions_info' => fn () => $request->session()->get('reactions_info'),
 
             // Cantidad de notificaciones no leídas del usuario autenticado.
             'unreadNotisCount' => fn () =>

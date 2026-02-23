@@ -26,31 +26,29 @@ class ReactionController extends Controller
      * Lista los usuarios que hicieron una reacción dada sobre una
      * publicación o comentario.
      * 
-     * @param Request       $request  Datos de la petición HTTP.
-     * @param Post|null     $post     Publicación que se reaccionó.
-     * @param Comment|null  $comment  Comentario que se reaccionó.
+     * @param Request $request  Datos de la petición HTTP.
      */
-    public function index(Request $request, ?Post $post = null, ?Comment $comment = null)
+    public function index(Request $request)
     {
-        // Captura el modelo sobre el que se reaccionó.
-        $model = $comment ?? $post;
-
-        // Si se recibió un comentario y este no es de la publicación,
-        // se muestra error.
-        if ($comment && $comment->post_id !== $post->id) {
-          abort(404);
-        }
-
         // Valida los datos enviados.
-        $request->validate([            
+        $request->validate([
+            'type' => 'required|in:post,comment',
+            'id' => 'required|integer',
             'emoji' => 'nullable|string|max:20',
+            'cursor' => 'nullable|string',
         ]);
 
-        // Obtiene el cursor de paginación.
-        $cursor = $request->header('X-Cursor');
+        $type = $request->type;
+        $id = $request->id;
+        $emoji = $request->emoji;
+        $cursor = $request->cursor;
 
-        // Agrupa las reacciones por emoji y cuenta el número de veces
-        // que se reaccionó con dicho emoji.
+        // Obtiene el modelo correspondiente.
+        $model = $type === 'post'
+            ? Post::findOrFail($id)
+            : Comment::findOrFail($id);
+
+        // Agrupa emojis y cuenta cantidad.
         $reactions = $model->reactions()
             ->select('emoji')
             ->selectRaw('COUNT(*) as count')
@@ -58,31 +56,31 @@ class ReactionController extends Controller
             ->orderByDesc('count')
             ->get();
 
-        // Si no se porporcionó un emoji, toma el primero de la consulta
-        // previa para listar los usuarios que reaccionaron con él.
-        $selected_emoji = $request->emoji ?? $reactions->first()?->emoji;
+        $selected_emoji = $emoji ?? $reactions->first()?->emoji;
 
-        // Obtiene los usuarios qu$emojie reaccionaron con el emoji especificado.
-        $users = $model->reactions()
-            ->where('emoji', $selected_emoji)
-            ->with('user')
-            ->orderByDesc('created_at')
-            ->cursorPaginate(20, ['*'], 'cursor', $cursor)
-            ->through(fn ($reaction) => $reaction->user);
- 
-        // Obtiene la publicación y el comentario relacionados
-        // con la reacción.
-        $reacted_post = $post->load('user');
-        $reacted_comment = $comment?->load('user');
+        $users = collect();
+        $next_cursor = null;
 
-        return Inertia::render('reactions/index', [
-            'post'            => (new PostResource($reacted_post))->resolve(),
-            'comment'         => $reacted_comment
-                                  ? (new CommentResource($reacted_comment))->resolve()
-                                  : null,
-            'reactions'       => ReactionResource::collection($reactions),
-            'users'           => UserResource::collection($users),
-            'selected_emoji'  => $selected_emoji,
+        if ($selected_emoji) {
+            $paginated = $model->reactions()
+                ->where('emoji', $selected_emoji)
+                ->with('user')
+                ->orderByDesc('created_at')
+                ->cursorPaginate(20, ['*'], 'cursor', $cursor);
+
+            $users = $paginated->through(fn ($reaction) => $reaction->user);
+            $next_cursor = $paginated->nextCursor()?->encode();
+        }
+
+        return back()->with([
+          'reactions_info' => [
+              'type' => $type,
+              'id' => $id,
+              'reactions' => ReactionResource::collection($reactions),
+              'users' => UserResource::collection($users),
+              'selected_emoji' => $selected_emoji,
+              'next_cursor' => $next_cursor,
+          ],
         ]);
     }
 
