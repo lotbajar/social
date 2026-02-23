@@ -130,59 +130,66 @@ export default function EntryListItemReactionsInfo({ entry }: { entry: Entry }) 
                 </>
             ) : (
                 <div className="flex h-full gap-4">
-                    {/* Columna izquierda */}
-                    <div className="min-w-[120px] space-y-2 border-r pr-3">
-                        {/* Emojis */}
-                        {emojiList.map((reaction) => (
-                            <button
-                                key={reaction.emoji}
-                                onClick={() => changeEmoji(reaction.emoji)}
-                                className={`flex w-full items-center justify-between rounded-md px-2 py-1 text-sm ${
-                                    reaction.emoji === selectedEmoji ? 'bg-muted font-semibold' : 'hover:bg-muted'
-                                }`}
-                            >
-                                <span>{reaction.emoji}</span>
-                                <span className="text-muted-foreground">{reaction.count}</span>
-                            </button>
-                        ))}
-                    </div>
+                    {emojiList.length > 0 ? (
+                        <>
+                            {/* Columna izquierda */}
+                            <div className="min-w-[120px] space-y-2 border-r pr-3">
+                                {/* Emojis */}
+                                {emojiList.map((reaction) => (
+                                    <button
+                                        key={reaction.emoji}
+                                        onClick={() => changeEmoji(reaction.emoji)}
+                                        title={t('users_who_reacted_with_emoji', { emoji: reaction.emoji })}
+                                        className={`flex w-full items-center justify-between rounded-md px-2 py-1 text-sm ${
+                                            reaction.emoji === selectedEmoji ? 'bg-muted font-semibold' : 'hover:bg-muted'
+                                        }`}
+                                    >
+                                        <span>{reaction.emoji}</span>
+                                        <span className="text-muted-foreground">{reaction.count}</span>
+                                    </button>
+                                ))}
+                            </div>
 
-                    {/* Columna derecha */}
-                    <div className="flex flex-1 flex-col gap-3">
-                        {usersLoading ? (
-                            <>
-                                {/* Icono cargando para la lista de usuarios */}
-                                <div className="flex flex-1 items-center justify-center">
-                                    <LoaderCircle className="h-4 w-4 animate-spin" aria-label={t('loading')} />
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                {/* Lista de usuarios */}
-                                <div className="flex flex-1 flex-col gap-3 overflow-y-auto">
-                                    {users.map((user) => (
-                                        <div key={user.id} className="flex items-center gap-3">
-                                            <UserAvatar className="h-10 w-10" user={user} />
-                                            <Link href={route('profile.show', user.username)}>{user.username}</Link>
+                            {/* Columna derecha */}
+                            <div className="flex flex-1 flex-col gap-3">
+                                {usersLoading ? (
+                                    <>
+                                        {/* Icono cargando para la lista de usuarios */}
+                                        <div className="flex flex-1 items-center justify-center">
+                                            <LoaderCircle className="h-4 w-4 animate-spin" aria-label={t('loading')} />
                                         </div>
-                                    ))}
-                                </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        {/* Lista de usuarios */}
+                                        <div className="flex flex-1 flex-col gap-3 overflow-y-auto">
+                                            {users.map((user) => (
+                                                <div key={user.id} className="flex items-center gap-3">
+                                                    <UserAvatar className="h-10 w-10" user={user} />
+                                                    <Link href={route('profile.show', user.username)}>{user.username}</Link>
+                                                </div>
+                                            ))}
+                                        </div>
 
-                                {/* Botón cargar más usuarios */}
-                                {nextCursor && (
-                                    <Button variant="outline" onClick={loadMore} className="text-sm" disabled={loadMoreLoading}>
-                                        {loadMoreLoading ? (
-                                            <>
-                                                <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden={true} /> {t('loading')}
-                                            </>
-                                        ) : (
-                                            t('load_more')
+                                        {/* Botón cargar más usuarios */}
+                                        {nextCursor && (
+                                            <Button variant="outline" onClick={loadMore} className="text-sm" disabled={loadMoreLoading}>
+                                                {loadMoreLoading ? (
+                                                    <>
+                                                        <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden={true} /> {t('loading')}
+                                                    </>
+                                                ) : (
+                                                    t('load_more')
+                                                )}
+                                            </Button>
                                         )}
-                                    </Button>
+                                    </>
                                 )}
-                            </>
-                        )}
-                    </div>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="flex flex-1 items-center justify-center">{t('no_reactions_yet')}</div>
+                    )}
                 </div>
             )}
         </div>
