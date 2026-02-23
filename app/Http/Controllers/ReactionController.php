@@ -57,10 +57,12 @@ class ReactionController extends Controller
             ->get();
 
         $selected_emoji = $emoji ?? $reactions->first()?->emoji;
-
+        
         $users = collect();
         $next_cursor = null;
 
+        // Si se seleccionó un emoji, obtiene los usuarios
+        // que reaccionaron con él.
         if ($selected_emoji) {
             $paginated = $model->reactions()
                 ->where('emoji', $selected_emoji)
