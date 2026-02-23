@@ -2,12 +2,13 @@ import type { Auth, Entry } from '@/types';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import { router, usePage } from '@inertiajs/react';
-import { SmilePlus } from 'lucide-react';
+import { Info, SmilePlus } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { ButtonGroup } from '../ui/button-group';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import EntryListItemReactionsInfo from './entry-list-item-reactions-info';
 
 interface EntryListItemReactionsProps {
@@ -138,11 +139,33 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
                 </div>
             )}
 
-            {/* Botón para abrir el selector de emojis */}
             {auth.user && (
-                <Button onClick={() => setShowPicker(!showPicker)} variant="outline" title={t('react')}>
-                    <SmilePlus />
-                </Button>
+                <div>
+                    <ButtonGroup>
+                        {/* Más información sobre las reacciones */}
+                        {reactions.length > 0 && (
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button variant="outline" title={t('see_who_reacted_to_this')}>
+                                        <Info className="h-4 w-4" aria-hidden={true} />
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>{t('reactions')}</DialogTitle>
+                                        <DialogDescription>{t('user_reaction_details')}</DialogDescription>
+                                    </DialogHeader>
+                                    <EntryListItemReactionsInfo entry={entry} />
+                                </DialogContent>
+                            </Dialog>
+                        )}
+
+                        {/* Botón para abrir el selector de emojis */}
+                        <Button onClick={() => setShowPicker(!showPicker)} variant="outline" title={t('react')}>
+                            <SmilePlus className="h-4 w-4" aria-hidden={true} />
+                        </Button>
+                    </ButtonGroup>
+                </div>
             )}
 
             {/* Selector de emojis */}
@@ -151,19 +174,6 @@ export default function EntryListItemReactions({ entry }: EntryListItemReactions
                     <Picker data={data} onEmojiSelect={handleSelect} />
                 </div>
             )}
-
-            {/* Más información sobre las reacciones */}
-            <Dialog>
-                <DialogTrigger asChild>
-                    <Button variant="outline">{t('reactions')}</Button>
-                </DialogTrigger>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>{t('reactions')}</DialogTitle>
-                    </DialogHeader>
-                    <EntryListItemReactionsInfo entry={entry} />
-                </DialogContent>
-            </Dialog>
         </div>
     );
 }
