@@ -382,7 +382,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     // Aplica un tamaño de fuente.
     function onSizeSelected(key: keyof typeof sizes): void {
         const sel = getSelection();
-        const content = sel && sel.start !== sel.end ? sel.value : key;
+        const content = sel && sel.start !== sel.end ? sel.value : t('text');
         replaceSelection(`:style[${content}]{size=${key}}`);
     }
 
