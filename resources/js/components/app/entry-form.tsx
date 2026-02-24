@@ -206,14 +206,15 @@ export default function EntryForm({ profileUserId = null, entry, postId, onSubmi
 
                     <div className="flex items-center gap-4">
                         {/* Enlace a las normas de la comunidad */}
-                        <div className="text-muted-foreground flex-1 text-sm hover:underline">
+                        <div className="text-muted-foreground flex-1 text-sm">
                             {specialPages[auth.user.language].guidelines && (
                                 <a
                                     href={route('page.show', {
                                         lang: auth.user.language,
                                         slug: specialPages[i18n.currentLang].guidelines?.slug,
                                     })}
-                                    target="_black"
+                                    className="hover:underline"
+                                    target="_blank"
                                 >
                                     {t('community_guidelines')}
                                 </a>
