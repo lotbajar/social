@@ -24,6 +24,7 @@
     "back_to_edit": "Volver a editar",
     "big": "Grande",
     "block": "Bloquear",
+    "blue": "Azul",
     "can_comment": "Puede comentar",
     "can_post": "Puede publicar",
     "can_react": "Puede reaccionar",
@@ -120,6 +121,7 @@
     "forgot_your_password": "¿Olvidaste tu contraseña?",
     "general": "General",
     "go_back": "Atrás",
+    "green": "Verde",
     "hidden_block": "Bloque oculto",
     "hidden_text": "Texto oculto",
     "hide_content": "Ocultar contenido",
@@ -202,6 +204,7 @@
     "password_settings": "Configuración de contraseña",
     "password_setup_link_will_be_sent": "Se enviará un enlace al correo registrado para que el usuario establezca su contraseña.",
     "pending": "Pendientes",
+    "pink": "Rosado",
     "post": "Publicar",
     "post_by_user": "Publicación de {{username}}",
     "post_deleted": "Publicación eliminada",
@@ -224,6 +227,7 @@
     "react_with_emoji": "Reaccionar con {{emoji}}",
     "reactions": "Reacciones",
     "read_more": "Leer más",
+    "red": "Rojo",
     "registered": "Registrado",
     "related_reports": "Reportes relacionados",
     "remember_me": "Recuérdame",
@@ -337,5 +341,6 @@
     "welcome_message": "Conecta, comparte y descubre lo que otros piensan.",
     "welcome_to_site": "Bienvenido a {{siteName}}",
     "whats_on_your_mind": "¿En qué estás pensando?",
+    "yellow": "Amarillo",
     "yes": "Sí"
 }

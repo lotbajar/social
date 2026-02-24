@@ -437,7 +437,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                     {(Object.keys(colors) as (keyof typeof colors)[]).map((key) => (
                         <button
                             key={key}
-                            title={t(`toolbar.colors.${key}`)}
+                            title={t(key)}
                             onClick={() => onColorSelected(key)}
                             className={`h-6 w-6 rounded-full ${colors[key]} border border-gray-300 transition-transform hover:scale-110`}
                         />

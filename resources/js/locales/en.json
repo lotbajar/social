@@ -24,6 +24,7 @@
     "back_to_edit": "Back to edit",
     "big": "Large",
     "block": "Block",
+    "blue": "Blue",
     "can_comment": "Can comment",
     "can_post": "Can post",
     "can_react": "Can react",
@@ -120,6 +121,7 @@
     "forgot_your_password": "Forgot your password?",
     "general": "General",
     "go_back": "Go back",
+    "green": "Green",
     "hidden_block": "Hidden block",
     "hidden_text": "Hidden text",
     "hide_content": "Hide content",
@@ -202,6 +204,7 @@
     "password_settings": "Password settings",
     "password_setup_link_will_be_sent": "A link will be sent to the user's email to set up their password.",
     "pending": "Pending",
+    "pink": "Pink",
     "post": "Post",
     "post_by_user": "Post by {{username}}",
     "post_deleted": "Post deleted",
@@ -224,6 +227,7 @@
     "react_with_emoji": "React with {{emoji}}",
     "reactions": "Reactions",
     "read_more": "Read more",
+    "red": "Red",
     "registered": "Registered",
     "related_reports": "Related reports",
     "remember_me": "Remember me",
@@ -337,5 +341,6 @@
     "welcome_message": "Connect, share, and see what others think.",
     "welcome_to_site": "Welcome to {{siteName}}",
     "whats_on_your_mind": "What's on your mind?",
+    "yellow": "Yellow",
     "yes": "Yes"
 }
