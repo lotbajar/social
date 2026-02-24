@@ -368,8 +368,10 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     } as const;
 
     const sizes = {
-        small: 'text-sm',
-        large: 'text-lg',
+        xsmall: { text: 'text-xs', icon: '!w-3 !h-3', tl: 'extra_small' },
+        small: { text: 'text-sm', icon: '!w-4 !h-4', tl: 'small' },
+        large: { text: 'text-lg', icon: '!w-5 !h-5', tl: 'large' },
+        xlarge: { text: 'text-xl', icon: '!w-6 !h-6', tl: 'extra_large' },
     } as const;
 
     // Aplica un color de fuente.
@@ -459,11 +461,14 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
                         <Button
                             key={key}
                             variant="ghost"
-                            className="flex w-full items-center justify-start gap-2 text-sm"
+                            className="flex w-full items-center justify-start gap-2"
                             onClick={() => onSizeSelected(key)}
                         >
-                            <Type className={`h-4 w-4 ${key === 'small' ? 'scale-90' : 'scale-125'}`} />
-                            {key === 'small' ? t('small') : t('big')}
+                            <div className="flex w-6 justify-center">
+                                <Type className={sizes[key].icon} />
+                            </div>
+
+                            <span className={sizes[key].text}>{t(sizes[key].tl)}</span>
                         </Button>
                     ))}
                 </PopoverContent>

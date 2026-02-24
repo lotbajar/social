@@ -25,8 +25,10 @@ const colors = {
 
 // Mapa de tamaños de fuente permitidos.
 const sizes = {
+  xsmall: 'text-xs',
   small: 'text-sm',
   large: 'text-lg',
+  xlarge: 'text-xl',
 };
 
 
