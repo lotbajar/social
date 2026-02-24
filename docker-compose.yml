@@ -12,11 +12,18 @@ services:
             - vendor
         - action: rebuild
           path: composer.json
-    ports:
-      - 80:80
-      - 8080:8080
     depends_on:
       - mysql
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.wordpress.rule=Host(`softwear.guru`)
+      - traefik.http.routers.wordpress.tls=true
+      - traefik.http.routers.wordpress.tls.certresolver=letsencrypt
+      - traefik.http.services.wordpress.loadbalancer.server.port=80
+    networks:
+      - traefik-proxy
+      - internal
+
   node:
     build:
       context: .
@@ -54,3 +61,10 @@ services:
       - 8025:8025
 volumes:
   mysql_data:
+
+
+networks:
+  traefik-proxy:
+    external: true
+  internal:
+    driver: bridge
