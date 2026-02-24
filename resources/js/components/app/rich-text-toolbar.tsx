@@ -389,14 +389,14 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
     return (
         <div className="flex flex-wrap items-center gap-1 p-1">
             {/* Negrita */}
-            <Tooltip content={t('bold')}>
+            <Tooltip content={t('apply_bold')}>
                 <Button type="button" variant="ghost" size="icon" onClick={onBold}>
                     <Bold className="h-4 w-4" />
                 </Button>
             </Tooltip>
 
             {/* Cursiva */}
-            <Tooltip content={t('italic')}>
+            <Tooltip content={t('apply_italic')}>
                 <Button type="button" variant="ghost" size="icon" onClick={onItalic}>
                     <Italic className="h-4 w-4" />
                 </Button>
@@ -404,7 +404,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
 
             {/* Encabezados (H1 y H2) */}
             <Popover>
-                <Tooltip content={t('heading')}>
+                <Tooltip content={t('insert_heading')}>
                     <PopoverTrigger asChild>
                         <Button variant="ghost" size="icon">
                             <Heading className="h-4 w-4" />
@@ -426,7 +426,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
 
             {/* Color de fuente */}
             <Popover>
-                <Tooltip content={t('font_color')}>
+                <Tooltip content={t('change_font_color')}>
                     <PopoverTrigger asChild>
                         <Button variant="ghost" size="icon">
                             <PaintBucket className="h-4 w-4" />
@@ -447,7 +447,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
 
             {/* Tamaño de fuente */}
             <Popover>
-                <Tooltip content={t('font_size')}>
+                <Tooltip content={t('change_font_size')}>
                     <PopoverTrigger asChild>
                         <Button variant="ghost" size="icon">
                             <Type className="h-4 w-4" />
@@ -565,7 +565,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
             </Popover>
 
             {/* Separador horizontal */}
-            <Tooltip content={t('separator')}>
+            <Tooltip content={t('insert_separator')}>
                 <Button type="button" variant="ghost" size="icon" onClick={onSeparator}>
                     <Minus className="h-4 w-4" />
                 </Button>
@@ -580,7 +580,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
 
             {/* Código */}
             <Popover>
-                <Tooltip content={t('code')}>
+                <Tooltip content={t('insert_code')}>
                     <PopoverTrigger asChild>
                         <Button variant="ghost" size="icon">
                             <Code className="h-4 w-4" />
@@ -601,7 +601,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
 
             {/* Lista */}
             <Popover>
-                <Tooltip content={t('list')}>
+                <Tooltip content={t('insert_list')}>
                     <PopoverTrigger asChild>
                         <Button variant="ghost" size="icon">
                             <List className="h-4 w-4" />
@@ -620,7 +620,7 @@ export default function RichTextToolbar({ user, text, onChange, textareaRef }: R
 
             {/* Contenido oculto */}
             <Popover>
-                <Tooltip content={t('hidden_content')}>
+                <Tooltip content={t('hide_content')}>
                     <PopoverTrigger asChild>
                         <Button variant="ghost" size="icon">
                             <EyeOff className="h-4 w-4" />
